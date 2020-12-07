@@ -1,4 +1,4 @@
-# Library for german Umlauts
+# Rust library for german umlauts
 
 ## Examples
 
