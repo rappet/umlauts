@@ -1,8 +1,12 @@
 [package]
 name = "umlauts"
 version = "0.1.0"
+description = "library for text transformation of german umlauts"
 authors = ["Raphael Peters <rappet@rappet.de>"]
+license = "MIT"
 edition = "2018"
+homepage = "https://github.com/rappet/umlauts"
+repository = "https://github.com/rappet/umlauts"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
