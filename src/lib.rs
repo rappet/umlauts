@@ -6,6 +6,18 @@ pub trait UmlautsOwned {
     /// - 'Ö' -> 'ö'
     /// - 'Ü' -> 'ü'
     ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// extern crate umlauts;
+    ///
+    /// use umlauts::UmlautsOwned;
+    ///
+    /// let mut s = "Öl Ärmel Übermut".to_string();
+    /// s.make_utf8_umlauts_lowercase();
+    /// assert_eq!("öl ärmel übermut", s);
+    /// ```
+    ///
     /// [`make_ascii_lowercase`]: std::u8::make_ascii_lowercase
     fn make_utf8_umlauts_lowercase(&mut self);
 
@@ -13,6 +25,18 @@ pub trait UmlautsOwned {
     /// - 'Ä' -> 'ä'
     /// - 'Ö' -> 'ö'
     /// - 'Ü' -> 'ü'
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// extern crate umlauts;
+    ///
+    /// use umlauts::UmlautsOwned;
+    ///
+    /// let mut s = "Öl Ärmel Übermut".to_string();
+    /// s.make_utf8_umlauts_uppercase();
+    /// assert_eq!("ÖL ÄRMEL ÜBERMUT", s);
+    /// ```
     ///
     /// [`make_ascii_uppercase`]: std::u8::make_ascii_uppercase
     fn make_utf8_umlauts_uppercase(&mut self);
