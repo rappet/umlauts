@@ -47,49 +47,60 @@ impl UmlautsOwned for [u8] {
         let mut i = 0;
         while i < self.len() - 1 {
             let c = self[i];
-            match (c, self[i+1]) {
+            match (c, self[i + 1]) {
                 (b'A'..=b'Z', _) => self[i] = c.to_ascii_lowercase(),
                 // Ä
-                (0xc3, 0x84) => { eprintln!("foo"); self[i+1] = 0xa4 },
+                (0xc3, 0x84) => {
+                    eprintln!("foo");
+                    self[i + 1] = 0xa4
+                }
                 // Ö
-                (0xc3, 0x96) => self[i+1] = 0xb6,
+                (0xc3, 0x96) => self[i + 1] = 0xb6,
                 // Ü
-                (0xc3, 0x9c) => self[i+1] = 0xbc,
-                _ => {},
+                (0xc3, 0x9c) => self[i + 1] = 0xbc,
+                _ => {}
             }
-            i+=1;
+            i += 1;
         }
-        if let Some(c) = self.last_mut() { c.make_ascii_lowercase() };
+        if let Some(c) = self.last_mut() {
+            c.make_ascii_lowercase()
+        };
     }
 
     fn make_utf8_umlauts_uppercase(self: &mut [u8]) {
         let mut i = 0;
         while i < self.len() - 1 {
             let c = self[i];
-            match (c, self[i+1]) {
+            match (c, self[i + 1]) {
                 (b'a'..=b'z', _) => self[i] = c.to_ascii_uppercase(),
                 // ä
-                (0xc3, 0xa4) => self[i+1] = 0x84,
+                (0xc3, 0xa4) => self[i + 1] = 0x84,
                 // ö
-                (0xc3, 0xb6) => self[i+1] = 0x96,
+                (0xc3, 0xb6) => self[i + 1] = 0x96,
                 // ü
-                (0xc3, 0xbc) => self[i+1] = 0x9c,
-                _ => {},
+                (0xc3, 0xbc) => self[i + 1] = 0x9c,
+                _ => {}
             }
-            i+=1;
+            i += 1;
         }
-        if let Some(c) = self.last_mut() { c.make_ascii_uppercase() };
+        if let Some(c) = self.last_mut() {
+            c.make_ascii_uppercase()
+        };
     }
 }
 
 #[cfg(feature = "unsafe")]
 impl UmlautsOwned for str {
     fn make_utf8_umlauts_lowercase(&mut self) {
-        unsafe { self.as_bytes_mut().make_utf8_umlauts_lowercase(); }
+        unsafe {
+            self.as_bytes_mut().make_utf8_umlauts_lowercase();
+        }
     }
 
     fn make_utf8_umlauts_uppercase(&mut self) {
-        unsafe { self.as_bytes_mut().make_utf8_umlauts_uppercase(); }
+        unsafe {
+            self.as_bytes_mut().make_utf8_umlauts_uppercase();
+        }
     }
 }
 
