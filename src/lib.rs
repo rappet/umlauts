@@ -31,9 +31,9 @@ pub trait UmlautsOwned {
     ///
     /// use umlauts::UmlautsOwned;
     ///
-    /// let mut s = "Öl Ärmel Übermut".to_string();
-    /// s.make_utf8_umlauts_uppercase();
-    /// assert_eq!("ÖL ÄRMEL ÜBERMUT", s);
+    /// let mut s = "Öl Ärmel Übermut".as_bytes().to_vec();
+    /// s.as_mut_slice().make_utf8_umlauts_uppercase();
+    /// assert_eq!("ÖL ÄRMEL ÜBERMUT".as_bytes(), s);
     /// ```
     fn make_utf8_umlauts_uppercase(&mut self);
 }
@@ -80,6 +80,7 @@ impl UmlautsOwned for [u8] {
     }
 }
 
+#[cfg(feature = "unsafe")]
 impl UmlautsOwned for str {
     fn make_utf8_umlauts_lowercase(&mut self) {
         unsafe { self.as_bytes_mut().make_utf8_umlauts_lowercase(); }
@@ -126,6 +127,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(feature = "unsafe")]
     fn make_utf8_string() {
         let mut text = "ÄÖÜäöüABCDabcd".to_string();
         text.make_utf8_umlauts_lowercase();

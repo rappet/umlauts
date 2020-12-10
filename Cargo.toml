@@ -11,3 +11,6 @@ repository = "https://github.com/rappet/umlauts"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+
+[features]
+unsafe = []
