@@ -4,3 +4,6 @@ Cargo.lock
 # IntelliJ IDEA
 .idea
 *.iml
+
+# Darwin
+.DS_Store
