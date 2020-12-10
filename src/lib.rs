@@ -44,7 +44,6 @@ pub trait UmlautsOwned {
 
 impl UmlautsOwned for [u8] {
     fn make_utf8_umlauts_lowercase(self: &mut [u8]) {
-        self.make_ascii_lowercase();
         let mut i = 0;
         while i < self.len() - 1 {
             let c = self[i];
@@ -60,11 +59,10 @@ impl UmlautsOwned for [u8] {
             }
             i+=1;
         }
-        self.last_mut().map(|c| c.make_ascii_lowercase());
+        if let Some(c) = self.last_mut() { c.make_ascii_lowercase() };
     }
 
     fn make_utf8_umlauts_uppercase(self: &mut [u8]) {
-        self.make_ascii_uppercase();
         let mut i = 0;
         while i < self.len() - 1 {
             let c = self[i];
@@ -80,7 +78,7 @@ impl UmlautsOwned for [u8] {
             }
             i+=1;
         }
-        self.last_mut().map(|c| c.make_ascii_uppercase());
+        if let Some(c) = self.last_mut() { c.make_ascii_uppercase() };
     }
 }
 
