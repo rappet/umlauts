@@ -1,6 +1,8 @@
 //! Utility library for handling strings with german Umlauts "äöüÄÖÜßẞ"
 
 pub trait UmlautsOwned {
+    /// Lowercases alphabetic ASCII chars and UTF-8 umlauts.
+    ///
     /// Like [`make_ascii_lowercase`] but it will also make utf8 umlauts lowercase:
     /// - 'Ä' -> 'ä'
     /// - 'Ö' -> 'ö'
@@ -13,16 +15,18 @@ pub trait UmlautsOwned {
     ///
     /// use umlauts::UmlautsOwned;
     ///
-    /// let mut s = "Öl Ärmel Übermut".to_string();
-    /// s.make_utf8_umlauts_lowercase();
-    /// assert_eq!("öl ärmel übermut", s);
+    /// let mut s = "Öl Ärmel Übermut".as_bytes().to_vec();
+    /// s.as_mut_slice().make_utf8_umlauts_lowercase();
+    /// assert_eq!("öl ärmel übermut".as_bytes(), s);
     /// ```
     fn make_utf8_umlauts_lowercase(&mut self);
 
-    /// Like [`make_ascii_uppercase`] but it will also make utf8 umlauts lowercase:
-    /// - 'Ä' -> 'ä'
-    /// - 'Ö' -> 'ö'
-    /// - 'Ü' -> 'ü'
+    /// Upercases alphabetic ASCII chars and UTF-8 umlauts.
+    ///
+    /// Like [`make_ascii_uppercase`] but it will also make utf8 umlauts uppercase:
+    /// - 'ä' -> 'Ä'
+    /// - 'ö' -> 'Ö'
+    /// - 'ü' -> 'Ü'
     ///
     /// # Examples
     ///
