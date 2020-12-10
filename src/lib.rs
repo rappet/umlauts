@@ -1,4 +1,5 @@
 //! Utility library for handling strings with german Umlauts "äöüÄÖÜßẞ"
+extern crate memchr;
 
 pub trait UmlautsOwned {
     /// Lowercases alphabetic ASCII chars and UTF-8 umlauts.
@@ -40,6 +41,22 @@ pub trait UmlautsOwned {
     /// assert_eq!("ÖL ÄRMEL ÜBERMUT".as_bytes(), s);
     /// ```
     fn make_utf8_umlauts_uppercase(&mut self);
+
+    /// Converts Umlauts to ae, oe, ue, ss, ...
+    ///
+    /// Maps umlauts according to DIN 5007-2:
+    /// - 'ä' -> 'ae'
+    /// - 'ö' -> 'oe'
+    /// - 'ü' -> 'ue'
+    /// - 'Ä' -> 'Ae'
+    /// - 'Ö' -> 'Oe'
+    /// - 'Ü' -> 'Ue'
+    /// - 'ß' -> 's'
+    ///
+    /// This function will ignore the uppercase ß,
+    /// because it can't be mapped in place due to requiring
+    /// three bytes.
+    fn make_utf8_umlauts_to_ascii(&mut self);
 }
 
 impl UmlautsOwned for [u8] {
@@ -84,6 +101,32 @@ impl UmlautsOwned for [u8] {
             c.make_ascii_uppercase()
         };
     }
+
+    fn make_utf8_umlauts_to_ascii(&mut self) {
+        let mut i = 0;
+        while i < self.len() - 1 {
+            if let Some(next_i) = memchr::memchr(0xc3, &self[..self.len() - 1]) {
+                if let Some(replacement) = match self[next_i + 1] {
+                    0xa4 => Some((b'a', b'e')), // ae
+                    0xb6 => Some((b'o', b'e')), // oe
+                    0xbc => Some((b'u', b'e')), // ue
+                    0x84 => Some((b'A', b'e')), // Ae
+                    0x96 => Some((b'O', b'e')), // Oe
+                    0x9c => Some((b'U', b'e')), // Ue
+                    0x9f => Some((b's', b's')), // ss
+                    _ => None,
+                } {
+                    self[next_i] = replacement.0;
+                    self[next_i + 1] = replacement.1;
+                    i = next_i + 1;
+                } else {
+                    i = next_i + 2;
+                }
+            } else {
+                break;
+            }
+        }
+    }
 }
 
 #[cfg(feature = "unsafe")]
@@ -97,6 +140,12 @@ impl UmlautsOwned for str {
     fn make_utf8_umlauts_uppercase(&mut self) {
         unsafe {
             self.as_bytes_mut().make_utf8_umlauts_uppercase();
+        }
+    }
+
+    fn make_utf8_umlauts_to_ascii(&mut self) {
+        unsafe {
+            self.as_bytes_mut().make_utf8_umlauts_to_ascii();
         }
     }
 }
@@ -134,6 +183,13 @@ mod tests {
         assert_eq!(text, "äöüäöüabcdabcd".as_bytes());
         text.make_utf8_umlauts_uppercase();
         assert_eq!(text, "ÄÖÜÄÖÜABCDABCD".as_bytes());
+    }
+
+    #[test]
+    fn make_utf8_umlauts_to_ascii_bytes() {
+        let mut text = "ÄÖÜäöüABCDabcd".as_bytes().to_vec();
+        text.make_utf8_umlauts_to_ascii();
+        assert_eq!(text, "AeOeUeaeoeueABCDabcd".as_bytes());
     }
 
     #[test]
