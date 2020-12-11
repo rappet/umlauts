@@ -69,7 +69,7 @@ pub trait UmlautsInplaceExt {
     /// - 'Ä' -> 'Ae'
     /// - 'Ö' -> 'Oe'
     /// - 'Ü' -> 'Ue'
-    /// - 'ß' -> 's'
+    /// - 'ß' -> 'ss'
     ///
     /// This function will ignore the uppercase ß,
     /// because it can't be mapped in place due to requiring
