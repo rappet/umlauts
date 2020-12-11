@@ -75,6 +75,40 @@ pub trait UmlautsInplaceExt {
     /// because it can't be mapped in place due to requiring
     /// three bytes.
     fn make_utf8_umlauts_to_ascii(&mut self);
+
+    /// Converts Umlauts to lowercase ae, oe, ue, ss, ... and converts all ASCII characters to
+    /// lowercase.
+    ///
+    /// Maps umlauts according to DIN 5007-2:
+    /// - 'ä' -> 'ae'
+    /// - 'ö' -> 'oe'
+    /// - 'ü' -> 'ue'
+    /// - 'Ä' -> 'ae'
+    /// - 'Ö' -> 'oe'
+    /// - 'Ü' -> 'ue'
+    /// - 'ß' -> 'ss'
+    ///
+    /// This function will ignore the uppercase ß,
+    /// because it can't be mapped in place due to requiring
+    /// three bytes.
+    fn make_utf8_umlauts_to_lowercase_ascii(&mut self);
+
+    /// Converts Umlauts to caps AE, OE, UE, SS, ... and converts all ASCII characters to uppercase
+    /// ASCII characters to uppercase.
+    ///
+    /// Maps umlauts according to DIN 5007-2:
+    /// - 'ä' -> 'AE'
+    /// - 'ö' -> 'OE'
+    /// - 'ü' -> 'UE'
+    /// - 'Ä' -> 'AE'
+    /// - 'Ö' -> 'OE'
+    /// - 'Ü' -> 'UE'
+    /// - 'ß' -> 'SS'
+    ///
+    /// This function will ignore the uppercase ß,
+    /// because it can't be mapped in place due to requiring
+    /// three bytes.
+    fn make_utf8_umlauts_to_uppercase_ascii(&mut self);
 }
 
 impl UmlautsInplaceExt for [u8] {
@@ -145,6 +179,68 @@ impl UmlautsInplaceExt for [u8] {
             }
         }
     }
+
+    fn make_utf8_umlauts_to_lowercase_ascii(&mut self) {
+        let mut i = 0;
+        while i < self.len() - 1 {
+            if self[i] == 0xc3 {
+                if let Some(replacement) = match self[i + 1] {
+                    0xa4 => Some((b'a', b'e')), // ae
+                    0xb6 => Some((b'o', b'e')), // oe
+                    0xbc => Some((b'u', b'e')), // ue
+                    0x84 => Some((b'a', b'e')), // AE
+                    0x96 => Some((b'o', b'e')), // OE
+                    0x9c => Some((b'u', b'e')), // UE
+                    0x9f => Some((b's', b's')), // SS
+                    _ => None,
+                } {
+                    self[i] = replacement.0;
+                    self[i + 1] = replacement.1;
+                    i += 1;
+                } else {
+                    i += 2;
+                }
+            } else {
+                self[i].make_ascii_lowercase();
+                i += 1;
+            }
+        }
+
+        if let Some(byte) = self.last_mut() {
+            byte.make_ascii_lowercase();
+        }
+    }
+
+    fn make_utf8_umlauts_to_uppercase_ascii(&mut self) {
+        let mut i = 0;
+        while i < self.len() - 1 {
+            if self[i] == 0xc3 {
+                if let Some(replacement) = match self[i + 1] {
+                    0xa4 => Some((b'A', b'E')), // AE
+                    0xb6 => Some((b'O', b'E')), // OE
+                    0xbc => Some((b'U', b'E')), // UE
+                    0x84 => Some((b'A', b'E')), // AE
+                    0x96 => Some((b'O', b'E')), // OE
+                    0x9c => Some((b'U', b'E')), // UE
+                    0x9f => Some((b'S', b'S')), // SS
+                    _ => None,
+                } {
+                    self[i] = replacement.0;
+                    self[i + 1] = replacement.1;
+                    i += 1;
+                } else {
+                    i += 2;
+                }
+            } else {
+                self[i].make_ascii_uppercase();
+                i += 1;
+            }
+        }
+
+        if let Some(byte) = self.last_mut() {
+            byte.make_ascii_uppercase();
+        }
+    }
 }
 
 #[cfg(feature = "unsafe")]
@@ -164,6 +260,18 @@ impl UmlautsInplaceExt for str {
     fn make_utf8_umlauts_to_ascii(&mut self) {
         unsafe {
             self.as_bytes_mut().make_utf8_umlauts_to_ascii();
+        }
+    }
+
+    fn make_utf8_umlauts_to_lowercase_ascii(&mut self) {
+        unsafe {
+            self.as_bytes_mut().make_utf8_umlauts_to_lowercase_ascii();
+        }
+    }
+
+    fn make_utf8_umlauts_to_uppercase_ascii(&mut self) {
+        unsafe {
+            self.as_bytes_mut().make_utf8_umlauts_to_uppercase_ascii();
         }
     }
 }
@@ -208,6 +316,20 @@ mod tests {
         let mut text = "ÄÖÜäöüABCDabcd".as_bytes().to_vec();
         text.make_utf8_umlauts_to_ascii();
         assert_eq!(text, "AeOeUeaeoeueABCDabcd".as_bytes());
+    }
+
+    #[test]
+    fn make_utf8_umlauts_to_lowercase_ascii_bytes() {
+        let mut text = "ÄÖÜäöüABCDabcd".as_bytes().to_vec();
+        text.make_utf8_umlauts_to_lowercase_ascii();
+        assert_eq!(text, "aeoeueaeoeueabcdabcd".as_bytes());
+    }
+
+    #[test]
+    fn make_utf8_umlauts_to_uppercase_ascii_bytes() {
+        let mut text = "ÄÖÜäöüABCDabcd".as_bytes().to_vec();
+        text.make_utf8_umlauts_to_uppercase_ascii();
+        assert_eq!(text, "AEOEUEAEOEUEABCDABCD".as_bytes());
     }
 
     #[test]
