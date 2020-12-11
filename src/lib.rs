@@ -13,13 +13,14 @@ pub trait UmlautsOwned {
     ///
     /// ```rust
     /// extern crate umlauts;
-    ///
-    /// use umlauts::UmlautsOwned;
+    /// use umlauts::prelude::*;
     ///
     /// let mut s = "Öl Ärmel Übermut".as_bytes().to_vec();
     /// s.as_mut_slice().make_utf8_umlauts_lowercase();
     /// assert_eq!("öl ärmel übermut".as_bytes(), s);
     /// ```
+    ///
+    /// [`make_ascii_lowercase`]: std::slice::[u8]::make_ascii_lowercase
     fn make_utf8_umlauts_lowercase(&mut self);
 
     /// Upercases alphabetic ASCII chars and UTF-8 umlauts.
@@ -33,13 +34,14 @@ pub trait UmlautsOwned {
     ///
     /// ```rust
     /// extern crate umlauts;
-    ///
-    /// use umlauts::UmlautsOwned;
+    /// use umlauts::prelude::*;
     ///
     /// let mut s = "Öl Ärmel Übermut".as_bytes().to_vec();
     /// s.as_mut_slice().make_utf8_umlauts_uppercase();
     /// assert_eq!("ÖL ÄRMEL ÜBERMUT".as_bytes(), s);
     /// ```
+    ///
+    /// [`make_ascii_uppercase`]: std::slice::[u8]::make_ascii_uppercase
     fn make_utf8_umlauts_uppercase(&mut self);
 
     /// Converts Umlauts to ae, oe, ue, ss, ...
