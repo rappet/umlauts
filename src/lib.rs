@@ -18,7 +18,7 @@ pub trait UmlautsInplaceExt {
     /// use umlauts::prelude::*;
     ///
     /// let mut s = "Öl Ärmel Übermut".as_bytes().to_vec();
-    /// s.as_mut_slice().make_utf8_umlauts_lowercase();
+    /// s.make_utf8_umlauts_lowercase();
     /// assert_eq!("öl ärmel übermut".as_bytes(), s);
     /// ```
     ///
@@ -39,7 +39,7 @@ pub trait UmlautsInplaceExt {
     /// use umlauts::prelude::*;
     ///
     /// let mut s = "Öl Ärmel Übermut".as_bytes().to_vec();
-    /// s.as_mut_slice().make_utf8_umlauts_uppercase();
+    /// s.make_utf8_umlauts_uppercase();
     /// assert_eq!("ÖL ÄRMEL ÜBERMUT".as_bytes(), s);
     /// ```
     ///
