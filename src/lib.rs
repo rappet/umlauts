@@ -74,6 +74,17 @@ pub trait UmlautsInplaceExt {
     /// This function will ignore the uppercase ß,
     /// because it can't be mapped in place due to requiring
     /// three bytes.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// extern crate umlauts;
+    /// use umlauts::prelude::*;
+    ///
+    /// let mut s = "Öl Ärmel Übermut".as_bytes().to_vec();
+    /// s.make_utf8_umlauts_to_ascii();
+    /// assert_eq!("Oel Aermel Uebermut".as_bytes(), s);
+    /// ```
     fn make_utf8_umlauts_to_ascii(&mut self);
 
     /// Converts Umlauts to lowercase ae, oe, ue, ss, ... and converts all ASCII characters to
@@ -91,6 +102,17 @@ pub trait UmlautsInplaceExt {
     /// This function will ignore the uppercase ß,
     /// because it can't be mapped in place due to requiring
     /// three bytes.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// extern crate umlauts;
+    /// use umlauts::prelude::*;
+    ///
+    /// let mut s = "Öl Ärmel Übermut".as_bytes().to_vec();
+    /// s.make_utf8_umlauts_to_lowercase_ascii();
+    /// assert_eq!("oel aermel uebermut".as_bytes(), s);
+    /// ```
     fn make_utf8_umlauts_to_lowercase_ascii(&mut self);
 
     /// Converts Umlauts to caps AE, OE, UE, SS, ... and converts all ASCII characters to uppercase
@@ -108,6 +130,17 @@ pub trait UmlautsInplaceExt {
     /// This function will ignore the uppercase ß,
     /// because it can't be mapped in place due to requiring
     /// three bytes.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// extern crate umlauts;
+    /// use umlauts::prelude::*;
+    ///
+    /// let mut s = "Öl Ärmel Übermut".as_bytes().to_vec();
+    /// s.make_utf8_umlauts_to_uppercase_ascii();
+    /// assert_eq!("OEL AERMEL UEBERMUT".as_bytes(), s);
+    /// ```
     fn make_utf8_umlauts_to_uppercase_ascii(&mut self);
 }
 
