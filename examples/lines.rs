@@ -1,5 +1,5 @@
 use std::io::{stdin, BufRead};
-use umlauts::UmlautsOwned;
+use umlauts::prelude::*;
 
 fn main() -> std::io::Result<()> {
     for line in stdin().lock().lines() {

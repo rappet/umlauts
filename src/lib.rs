@@ -1,7 +1,9 @@
 //! Utility library for handling strings with german Umlauts "äöüÄÖÜßẞ"
 extern crate memchr;
 
-pub trait UmlautsOwned {
+pub mod prelude;
+
+pub trait UmlautsInplaceExt {
     /// Lowercases alphabetic ASCII chars and UTF-8 umlauts.
     ///
     /// Like [`make_ascii_lowercase`] but it will also make utf8 umlauts lowercase:
@@ -61,7 +63,7 @@ pub trait UmlautsOwned {
     fn make_utf8_umlauts_to_ascii(&mut self);
 }
 
-impl UmlautsOwned for [u8] {
+impl UmlautsInplaceExt for [u8] {
     fn make_utf8_umlauts_lowercase(self: &mut [u8]) {
         let mut i = 0;
         while i < self.len() - 1 {
@@ -132,7 +134,7 @@ impl UmlautsOwned for [u8] {
 }
 
 #[cfg(feature = "unsafe")]
-impl UmlautsOwned for str {
+impl UmlautsInplaceExt for str {
     fn make_utf8_umlauts_lowercase(&mut self) {
         unsafe {
             self.as_bytes_mut().make_utf8_umlauts_lowercase();
@@ -154,7 +156,7 @@ impl UmlautsOwned for str {
 
 #[cfg(test)]
 mod tests {
-    use crate::UmlautsOwned;
+    use crate::UmlautsInplaceExt;
 
     #[test]
     fn char_length() {
