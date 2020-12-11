@@ -1,8 +1,22 @@
 //! Utility library for handling strings with german Umlauts "äöüÄÖÜßẞ"
 extern crate memchr;
 
+/// Includes traits for manipulating slices/Strings/...
+///
+/// # Examples
+/// ```rust
+/// extern crate umlauts;
+/// use umlauts::prelude::*;
+/// ```
 pub mod prelude;
 
+/// Inplace string processing functions.
+///
+/// `UnlautsInplaceExt` adds inplace string processing functions for the german "Umlauts"
+/// 'ä', 'ö', 'ü', 'ß' and their uppercase variants (except for uppercase 'ß').
+/// Because these functions dont resize their containers or shift the containing data,
+/// those methods are limited and should only be used if the higher performance
+/// is absolutely needed.
 pub trait UmlautsInplaceExt {
     /// Lowercases alphabetic ASCII chars and UTF-8 umlauts.
     ///
