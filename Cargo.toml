@@ -1,6 +1,6 @@
 [package]
 name = "umlauts"
-version = "0.1.1"
+version = "0.1.2-alpha.0"
 description = "library for text transformation of german umlauts"
 authors = ["Raphael Peters <rappet@rappet.de>"]
 license = "MIT"
