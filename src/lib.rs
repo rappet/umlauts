@@ -1,6 +1,15 @@
-//! Utility library for handling strings with german Umlauts "äöüÄÖÜßẞ"
+//! Utility library for handling strings with german Umlauts "äöüÄÖÜß"
 
+/// Inplace string processing functions.
+///
+/// `UnlautsInplaceExt` adds inplace string processing functions for the german "Umlauts"
+/// 'ä', 'ö', 'ü', 'ß' and their uppercase variants (except for uppercase 'ß').
+/// Because these functions dont resize their containers or shift the containing data,
+/// those methods are limited and should only be used if the higher performance
+/// is absolutely needed.
 pub trait UmlautsOwned {
+    /// Lowercases alphabetic ASCII chars and UTF-8 umlauts.
+    ///
     /// Like [`make_ascii_lowercase`] but it will also make utf8 umlauts lowercase:
     /// - 'Ä' -> 'ä'
     /// - 'Ö' -> 'ö'
@@ -10,31 +19,35 @@ pub trait UmlautsOwned {
     ///
     /// ```rust
     /// extern crate umlauts;
-    ///
     /// use umlauts::UmlautsOwned;
     ///
-    /// let mut s = "Öl Ärmel Übermut".to_string();
+    /// let mut s = "Öl Ärmel Übermut".as_bytes().to_vec();
     /// s.make_utf8_umlauts_lowercase();
-    /// assert_eq!("öl ärmel übermut", s);
+    /// assert_eq!("öl ärmel übermut".as_bytes(), s);
     /// ```
+    ///
+    /// [`make_ascii_lowercase`]: std::slice::[u8]::make_ascii_lowercase
     fn make_utf8_umlauts_lowercase(&mut self);
 
-    /// Like [`make_ascii_uppercase`] but it will also make utf8 umlauts lowercase:
-    /// - 'Ä' -> 'ä'
-    /// - 'Ö' -> 'ö'
-    /// - 'Ü' -> 'ü'
+    /// Upercases alphabetic ASCII chars and UTF-8 umlauts.
+    ///
+    /// Like [`make_ascii_uppercase`] but it will also make utf8 umlauts uppercase:
+    /// - 'ä' -> 'Ä'
+    /// - 'ö' -> 'Ö'
+    /// - 'ü' -> 'Ü'
     ///
     /// # Examples
     ///
     /// ```rust
     /// extern crate umlauts;
-    ///
     /// use umlauts::UmlautsOwned;
     ///
-    /// let mut s = "Öl Ärmel Übermut".to_string();
+    /// let mut s = "Öl Ärmel Übermut".as_bytes().to_vec();
     /// s.make_utf8_umlauts_uppercase();
-    /// assert_eq!("ÖL ÄRMEL ÜBERMUT", s);
+    /// assert_eq!("ÖL ÄRMEL ÜBERMUT".as_bytes(), s);
     /// ```
+    ///
+    /// [`make_ascii_uppercase`]: std::slice::[u8]::make_ascii_uppercase
     fn make_utf8_umlauts_uppercase(&mut self);
 }
 
